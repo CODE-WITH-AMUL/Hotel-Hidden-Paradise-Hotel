@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #d4af37;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        body {
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            padding-top: 20px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            border-radius: 5px;
+            padding: 10px 15px;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: #c9a227;
+            border-color: #c9a227;
+        }
+        .room-type-card {
+            cursor: pointer;
+        }
+        .search-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .qr-code {
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+        .star-rating {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="text-center mb-4">
+            <h3><i class="fas fa-hotel"></i> Luxury Stays</h3>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'my_reservations' %}">
+                    <i class="fas fa-calendar-check"></i> My Reservations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if not viewing_reservation and not show_qr and not showing_reservations %}
+                <h2 class="mb-4">Find Your Perfect Stay</h2>
+                
+                <div class="search-box">
+                    <form method="POST" action="{% url 'search_rooms' %}">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="check_in" class="form-label">Check-in Date</label>
+                                <input type="date" class="form-control" id="check_in" name="check_in" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="check_out" class="form-label">Check-out Date</label>
+                                <input type="date" class="form-control" id="check_out" name="check_out" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="room_type" class="form-label">Room Type</label>
+                                <select class="form-select" id="room_type" name="room_type" required>
+                                    <option value="">Select Room Type</option>
+                                    {% for room_type in room_types %}
+                                        <option value="{{ room_type.id }}">{{ room_type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="adults" class="form-label">Adults</label>
+                                <input type="number" class="form-control" id="adults" name="adults" min="1" value="1" required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Search Rooms</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {% if search_performed %}
+                    <h3 class="mb-4">Available {{ room_type.name }} Rooms</h3>
+                    
+                    {% if available_rooms %}
+                        <div class="row">
+                            {% for room in available_rooms %}
+                                <div class="col-md-4">
+                                    <div class="card room-type-card">
+                                        <img src="{{ room.room_type.image.url }}" class="card-img-top" alt="{{ room.room_type.name }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ room.room_type.name }}</h5>
+                                            <p class="card-text">
+                                                <i class="fas fa-door-open"></i> Room {{ room.room_number }}<br>
+                                                <i class="fas fa-users"></i> Capacity: {{ room.room_type.capacity }}<br>
+                                                <i class="fas fa-dollar-sign"></i> ${{ room.room_type.price }} per night
+                                            </p>
+                                            <form method="POST" action="{% url 'book_room' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="room_id" value="{{ room.id }}">
+                                                <input type="hidden" name="check_in" value="{{ check_in }}">
+                                                <input type="hidden" name="check_out" value="{{ check_out }}">
+                                                <input type="hidden" name="adults" value="{{ adults }}">
+                                                <input type="hidden" name="children" value="{{ children }}">
+                                                <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No rooms available for your selected dates. Please try different dates.
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <h3 class="mb-4">Our Room Types</h3>
+                    <div class="row">
+                        {% for room_type in room_types %}
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <img src="{{ room_type.image.url }}" class="card-img-top" alt="{{ room_type.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ room_type.name }}</h5>
+                                        <p class="card-text">
+                                            <i class="fas fa-users"></i> Capacity: {{ room_type.capacity }}<br>
+                                            <i class="fas fa-dollar-sign"></i> ${{ room_type.price }} per night
+                                        </p>
+                                        <p class="card-text">{{ room_type.description|truncatewords:20 }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if viewing_reservation %}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Reservation #{{ reservation.id }}</h2>
+                    <a href="{% url 'my_reservations' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Reservations
+                    </a>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Reservation Details</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h5>Room Information</h5>
+                                        <p>
+                                            <strong>Type:</strong> {{ reservation.room.room_type.name }}<br>
+                                            <strong>Room Number:</strong> {{ reservation.room.room_number }}<br>
+                                            <strong>Floor:</strong> {{ reservation.room.floor }}<br>
+                                            <strong>Price per night:</strong> ${{ reservation.room.room_type.price }}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>Dates</h5>
+                                        <p>
+                                            <strong>Check-in:</strong> {{ reservation.check_in }}<br>
+                                            <strong>Check-out:</strong> {{ reservation.check_out }}<br>
+                                            <strong>Nights:</strong> {{ nights }}<br>
+                                            <strong>Status:</strong> 
+                                            <span class="badge bg-{% if reservation.status == 'confirmed' %}success{% elif reservation.status == 'cancelled' %}danger{% else %}info{% endif %}">
+                                                {{ reservation.get_status_display }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mb-3">Additional Services</h5>
+                                {% if reservation_services %}
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Service</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for service in reservation_services %}
+                                                    <tr>
+                                                        <td>{{ service.service.name }}</td>
+                                                        <td>${{ service.service.price }}</td>
+                                                        <td>{{ service.quantity }}</td>
+                                                        <td>${{ service.total_price }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>No additional services added.</p>
+                                {% endif %}
+                                
+                                {% if not reservation.payment_status %}
+                                    <div class="mt-4">
+                                        <form method="POST" action="{% url 'add_service' reservation.id %}">
+                                            {% csrf_token %}
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label for="service_id" class="form-label">Add Service</label>
+                                                    <select class="form-select" id="service_id" name="service_id" required>
+                                                        <option value="">Select a service</option>
+                                                        {% for service in services %}
+                                                            <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="quantity" class="form-label">Quantity</label>
+                                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
+                                                </div>
+                                                <div class="col-md-3 d-flex align-items-end">
+                                                    <button type="submit" class="btn btn-primary">Add Service</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Payment Summary</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <tr>
+                                        <th>Room ({{ nights }} nights)</th>
+                                        <td>${{ room_total }}</td>
+                                    </tr>
+                                    {% if services_total > 0 %}
+                                        <tr>
+                                            <th>Services</th>
+                                            <td>${{ services_total }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr class="table-active">
+                                        <th>Total Amount</th>
+                                        <td>${{ total_amount }}</td>
+                                    </tr>
+                                </table>
+                                
+                                {% if not reservation.payment_status %}
+                                    <div class="mt-3">
+                                        <h5>Payment Method</h5>
+                                        <form method="POST" action="{% url 'initiate_payment' reservation.id %}">
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="payment_method" id="credit_card" value="credit_card" required>
+                                                    <label class="form-check-label" for="credit_card">
+                                                        Credit Card
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="payment_method" id="debit_card" value="debit_card">
+                                                    <label class="form-check-label" for="debit_card">
+                                                        Debit Card
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="payment_method" id="cash" value="cash">
+                                                    <label class="form-check-label" for="cash">
+                                                        Cash (at hotel)
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="payment_method" id="qr" value="qr">
+                                                    <label class="form-check-label" for="qr">
+                                                        QR Code Payment
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle"></i> Payment completed via {{ reservation.get_payment_method_display }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if reservation.payment_status and not reservation.feedback %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Share Your Feedback</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{% url 'submit_feedback' reservation.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Rating</label>
+                                            <div class="star-rating">
+                                                {% for i in "12345" %}
+                                                    <i class="fas fa-star" onclick="setRating({{ i }})" style="cursor: pointer;"></i>
+                                                {% endfor %}
+                                            </div>
+                                            <input type="hidden" name="rating" id="rating" value="5" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="comment" class="form-label">Comments</label>
+                                            <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Submit Feedback</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if show_qr %}
+                <div class="text-center">
+                    <h2 class="mb-4">Scan QR Code to Pay</h2>
+                    <img src="{{ payment.qr_code.url }}" class="qr-code mb-4" alt="Payment QR Code">
+                    <p class="lead">Amount: ${{ total_amount }}</p>
+                    <p>Transaction ID: {{ payment.transaction_id }}</p>
+                    <a href="{% url 'view_reservation' reservation.id %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-arrow-left"></i> Back to Reservation
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if showing_reservations %}
+                <h2 class="mb-4">My Reservations</h2>
+                
+                {% if reservations %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Room</th>
+                                    <th>Dates</th>
+                                    <th>Nights</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in reservations %}
+                                    <tr>
+                                        <td>{{ res.id }}</td>
+                                        <td>{{ res.room.room_type.name }} ({{ res.room.room_number }})</td>
+                                        <td>
+                                            {{ res.check_in }} to {{ res.check_out }}
+                                        </td>
+                                        <td>{{ res.nights }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if res.status == 'confirmed' %}success{% elif res.status == 'cancelled' %}danger{% else %}info{% endif %}">
+                                                {{ res.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if res.payment_status %}
+                                                <span class="badge bg-success">Paid</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'view_reservation' res.id %}" class="btn btn-sm btn-primary">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You don't have any reservations yet. <a href="{% url 'home' %}">Book a room now!</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set today's date as default check-in and tomorrow as check-out
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            if (document.getElementById('check_in')) {
+                document.getElementById('check_in').value = today;
+                document.getElementById('check_in').min = today;
+            }
+            
+            if (document.getElementById('check_out')) {
+                document.getElementById('check_out').value = tomorrowStr;
+                document.getElementById('check_out').min = tomorrowStr;
+            }
+        });
+
+        function setRating(rating) {
+            document.getElementById('rating').value = rating;
+            const stars = document.querySelectorAll('.star-rating i');
+            
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('fas');
+                    star.classList.remove('far');
+                } else {
+                    star.classList.add('far');
+                    star.classList.remove('fas');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
