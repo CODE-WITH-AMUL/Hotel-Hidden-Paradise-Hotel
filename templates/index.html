@@ -3,414 +3,1057 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidden Paradises Hotel</title>
+    <title>Hidden Paradise Hotel | Luxury Boutique Hotel in Kathmandu</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-dark: #0a192f;
-            --primary-blue: #172a45;
-            --accent-blue:rgb(24, 84, 214);
-            --text-light: #ccd6f6;
-            --text-dark: #1e1e1e;
-            --white: #ffffff;
-            --transition: all 0.3s ease;
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --secondary: #d69e2e;
+            --secondary-light: #ecc94b;
+            --light: #f7fafc;
+            --dark: #1a202c;
+            --text-light: #f8fafc;
+            --text-dark: #2d3748;
+            --accent: #9f7aea;
         }
-
-        [data-theme="dark"] {
-            --bg-color: var(--primary-dark);
-            --nav-color: var(--primary-blue);
-            --text-color: var(--text-light);
-            --card-bg: var(--primary-blue);
-        }
-
-        [data-theme="light"] {
-            --bg-color: var(--white);
-            --nav-color: #f0f0f0;
-            --text-color: var(--text-dark);
-            --card-bg: #f8f8f8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--light);
+            transition: all 0.4s ease;
         }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            background-color: var(--nav-color);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
+        
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-light);
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent-blue);
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            transition: var(--transition);
+        
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            min-height: 700px;
             position: relative;
+            overflow: hidden;
         }
-
-        .nav-links a:hover {
-            color: var(--accent-blue);
+        
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
-
-        .nav-links a::after {
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            z-index: 1;
+            position: relative;
+            height: 100%;
+        }
+        
+        /* Navigation */
+        .navbar-custom {
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .navbar-custom.scrolled {
+            background-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-custom .nav-link {
+            position: relative;
+            margin: 0 10px;
+            padding: 8px 0;
+            font-weight: 500;
+        }
+        
+        .navbar-custom .nav-link:after {
             content: '';
             position: absolute;
+            bottom: 0;
+            left: 0;
             width: 0;
             height: 2px;
-            bottom: -5px;
-            left: 0;
-            background-color: var(--accent-blue);
-            transition: var(--transition);
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
         }
-
-        .nav-links a:hover::after {
+        
+        .navbar-custom .nav-link:hover:after {
             width: 100%;
         }
-
-        .theme-toggle {
-            background: none;
+        
+        /* Buttons */
+        .btn-primary-custom {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+            padding: 12px 28px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.3);
+        }
+        
+        .btn-secondary-custom {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+            transition: all 0.3s ease;
+            padding: 12px 28px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+        }
+        
+        .btn-secondary-custom:hover {
+            background-color: var(--secondary-light);
+            border-color: var(--secondary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(214, 158, 46, 0.3);
+        }
+        
+        /* Cards */
+        .feature-card {
             border: none;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: var(--transition);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-
-        .theme-toggle:hover {
-            color: var(--accent-blue);
-            transform: rotate(30deg);
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
-
-        .hero {
+        
+        .feature-card .card-img-top {
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .feature-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        
+        .feature-card .card-body {
+            padding: 25px;
+        }
+        
+        /* Testimonials */
+        .testimonial-card {
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .testimonial-card {
+            background-color: #2d3748;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-card::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 80px;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            opacity: 0.1;
+            line-height: 1;
+        }
+        
+        /* Room Showcase */
+        .room-showcase {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            height: 400px;
+        }
+        
+        .room-showcase img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .room-showcase:hover img {
+            transform: scale(1.05);
+        }
+        
+        .room-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 30px;
+            color: white;
+            transform: translateY(100px);
+            transition: transform 0.4s ease;
+        }
+        
+        .room-showcase:hover .room-overlay {
+            transform: translateY(0);
+        }
+        
+        /* Local Experience */
+        .experience-card {
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 300px;
+        }
+        
+        .experience-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .experience-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
             display: flex;
-            min-height: 100vh;
-            padding: 8rem 5% 4rem;
-            align-items: center;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            color: white;
         }
-
-        .hero-content {
-            flex: 1;
-            padding-right: 2rem;
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            position: relative;
         }
-
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image svg {
-            max-width: 100%;
-            height: auto;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        h1 span {
-            color: var(--accent-blue);
-        }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            max-width: 600px;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-blue);
-            color: var(--primary-dark);
-            padding: 0.8rem 2rem;
-            border-radius: 4px;
+        
+        .footer-links a {
+            display: block;
+            margin-bottom: 10px;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.3s ease;
             text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            border: 1px solid var(--accent-blue);
         }
-
-        .btn:hover {
-            background-color: transparent;
-            color: var(--accent-blue);
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--secondary);
             transform: translateY(-3px);
         }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--accent-blue);
-            margin-left: 1rem;
+        
+        /* Dark Mode */
+        .dark-mode .card {
+            background-color: #2d3748;
+            border-color: #4a5568;
         }
-
-        .btn-outline:hover {
-            background-color: var(--accent-blue);
-            color: var(--primary-dark);
+        
+        .dark-mode .bg-light {
+            background-color: #2d3748 !important;
         }
-
-        section {
-            padding: 5rem 5%;
+        
+        /* Utility Classes */
+        .text-accent {
+            color: var(--secondary);
         }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2.2rem;
+        
+        .bg-accent {
+            background-color: var(--secondary);
         }
-
-        .section-title span {
-            color: var(--accent-blue);
+        
+        .letter-spacing-1 {
+            letter-spacing: 1px;
         }
-
-        .about-content {
-            display: flex;
-            gap: 3rem;
-            align-items: center;
+        
+        .letter-spacing-2 {
+            letter-spacing: 2px;
         }
-
-        .about-text {
-            flex: 1;
+        
+        .z-10 {
+            z-index: 10;
         }
-
-        .about-image {
-            flex: 1;
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
         }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
+        
+        .dark-mode::-webkit-scrollbar-track {
+            background: #2d3748;
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        
+        .dark-mode::-webkit-scrollbar-thumb {
+            background: #4a5568;
         }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+        
+        /* Booking Widget */
+        .booking-widget {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-
-        input, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            transition: var(--transition);
+        
+        .dark-mode .booking-widget {
+            background-color: #2d3748;
         }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+        
+        .form-control {
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
-
-        footer {
-            background-color: var(--nav-color);
-            padding: 3rem 5%;
-            text-align: center;
+        
+        .dark-mode .form-control {
+            background-color: #4a5568;
+            border-color: #4a5568;
+            color: white;
         }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
+        
+        /* Section Padding */
+        .section-padding {
+            padding: 100px 0;
         }
-
-        .footer-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-blue);
-        }
-
-        .copyright {
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
+        
         @media (max-width: 768px) {
-            .hero, .about-content {
-                flex-direction: column;
+            .section-padding {
+                padding: 60px 0;
             }
             
-            .hero-content, .about-text {
-                padding-right: 0;
-                margin-bottom: 2rem;
+            .hero-section {
+                height: auto;
+                min-height: 100vh;
             }
-            
-            h1 {
-                font-size: 2.2rem;
+        }
+        
+        /* Animation for scroll down arrow */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
             }
-            
-            .btn-container {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
+            40% {
+                transform: translateY(-10px);
             }
-            
-            .btn-outline {
-                margin-left: 0;
+            60% {
+                transform: translateY(-5px);
             }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Contact form */
+        .contact-info-box {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .contact-info-box {
+            background-color: #2d3748;
+        }
+        
+        .contact-info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info-box:hover .contact-icon {
+            background-color: var(--secondary);
+            transform: rotate(360deg);
         }
     </style>
 </head>
-<body data-theme="dark">
-    <nav class="navbar">
-        <div class="logo">Hidden Paradises</div>
-        <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+<body class="light-mode">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="font-bold text-2xl">Hidden Paradise</span>
+                <span class="text-secondary ms-1">Hotel</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#rooms">Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#amenities">Amenities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#experiences">Experiences</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-sm btn-secondary-custom px-4" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <div class="mode-toggle rounded-circle p-2 d-flex align-items-center justify-content-center" id="modeToggle" title="Toggle Dark Mode">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <button class="theme-toggle" id="themeToggle">🌓</button>
     </nav>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Discover Your <span>Hidden Paradise</span></h1>
-            <p>Experience luxury like never before at our secluded retreats. Unplug, unwind, and reconnect with nature in our exclusive locations around the world.</p>
-            <div class="btn-container">
-                <a href="{% url 'login' %}" class="btn">Get Started</a>
-                <a href="#about" class="btn btn-outline">Learn More</a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <!-- Video Background (fallback to image if video doesn't load) -->
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-relaxing-in-a-modern-hotel-room-4153-large.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h1 class="display-3 fw-bold text-white mb-4" data-aos="fade-up">Discover Luxury in the Heart of Kathmandu</h1>
+                        <p class="lead text-white mb-5" data-aos="fade-up" data-aos-delay="100">Hidden Paradise Hotel offers an unparalleled experience blending modern luxury with authentic Nepalese hospitality.</p>
+                        <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="200">
+                            <a href="#booking" class="btn btn-secondary-custom btn-lg px-4 py-3">Book Your Stay</a>
+                            <a href="#rooms" class="btn btn-outline-light btn-lg px-4 py-3">Explore Rooms</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <!-- Booking widget will go here on larger screens -->
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="hero-image">
-            <svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Modern abstract island/paradise SVG -->
-                <path d="M250 500C388.071 500 500 388.071 500 250C500 111.929 388.071 0 250 0C111.929 0 0 111.929 0 250C0 388.071 111.929 500 250 500Z" fill="#64FFDA" fill-opacity="0.1"/>
-                <path d="M250 400C334.359 400 400 334.359 400 250C400 165.641 334.359 100 250 100C165.641 100 100 165.641 100 250C100 334.359 165.641 400 250 400Z" fill="#64FFDA" fill-opacity="0.15"/>
-                <path d="M250 350C307.228 350 350 307.228 350 250C350 192.772 307.228 150 250 150C192.772 150 150 192.772 150 250C150 307.228 192.772 350 250 350Z" fill="#64FFDA" fill-opacity="0.2"/>
-                <path d="M250 300C279.823 300 300 279.823 300 250C300 220.177 279.823 200 250 200C220.177 200 200 220.177 200 250C200 279.823 220.177 300 250 300Z" fill="#64FFDA" fill-opacity="0.25"/>
-                <path d="M180 220C193.255 220 204 209.255 204 196C204 182.745 193.255 172 180 172C166.745 172 156 182.745 156 196C156 209.255 166.745 220 180 220Z" fill="#64FFDA" fill-opacity="0.3"/>
-                <path d="M320 220C333.255 220 344 209.255 344 196C344 182.745 333.255 172 320 172C306.745 172 296 182.745 296 196C296 209.255 306.745 220 320 220Z" fill="#64FFDA" fill-opacity="0.3"/>
-                <path d="M250 240C257.732 240 264 233.732 264 226C264 218.268 257.732 212 250 212C242.268 212 236 218.268 236 226C236 233.732 242.268 240 250 240Z" fill="#64FFDA" fill-opacity="0.4"/>
-            </svg>
+        
+        <a href="#about" class="position-absolute bottom-0 start-50 translate-middle-x mb-5 z-10 text-white" style="font-size: 2rem;">
+            <i class="fas fa-chevron-down bounce"></i>
+        </a>
+    </section>
+
+    <!-- Booking Widget (for mobile) -->
+    <section class="d-lg-none bg-accent py-4">
+        <div class="container">
+            <div class="booking-widget">
+                <h5 class="text-center mb-4">Book Your Stay</h5>
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Check-In</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Check-Out</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Adults</label>
+                            <select class="form-select">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4+</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Children</label>
+                            <select class="form-select">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3+</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Rooms</label>
+                            <select class="form-select">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary-custom w-100">Check Availability</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 
-    <section id="about">
-        <h2 class="section-title">About <span>Us</span></h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Hidden Paradises Hotel is a collection of exclusive, secluded retreats designed for those who seek extraordinary experiences away from the crowds. Each of our properties is carefully selected for its unique natural beauty and privacy.</p>
-                <p>Our mission is to provide unparalleled luxury while maintaining the highest standards of sustainability and environmental responsibility. We believe in creating spaces that harmonize with their surroundings rather than dominate them.</p>
-                <p>From private beach villas to mountain hideaways, each Hidden Paradises location offers a distinct experience while maintaining our signature standards of service and comfort.</p>
-            </div>
-            <div class="about-image">
-                <!-- This would be an image in a real implementation -->
-                <svg width="100%" height="auto" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="600" height="400" fill="#172A45" fill-opacity="0.5"/>
-                    <path d="M0 400L100 300L200 350L300 250L400 300L500 200L600 250V400H0Z" fill="#64FFDA" fill-opacity="0.3"/>
-                    <path d="M150 250C166.569 250 180 236.569 180 220C180 203.431 166.569 190 150 190C133.431 190 120 203.431 120 220C120 236.569 133.431 250 150 250Z" fill="#64FFDA" fill-opacity="0.5"/>
-                    <path d="M450 200C466.569 200 480 186.569 480 170C480 153.431 466.569 140 450 140C433.431 140 420 153.431 420 170C420 186.569 433.431 200 450 200Z" fill="#64FFDA" fill-opacity="0.5"/>
-                </svg>
+    <!-- About Section -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Hidden Paradise Hotel" class="img-fluid rounded-3 shadow">
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <span class="text-accent letter-spacing-2 text-uppercase small">About Us</span>
+                    <h2 class="display-5 fw-bold mb-4">A Hidden Gem in Kathmandu</h2>
+                    <p class="lead">Nestled in the vibrant heart of Kathmandu, Hidden Paradise Hotel offers a sanctuary of luxury and tranquility amidst the city's rich cultural tapestry.</p>
+                    <p>Our boutique hotel seamlessly blends contemporary comfort with traditional Nepalese design elements, creating a unique atmosphere that honors local heritage while providing world-class amenities. Each space has been thoughtfully designed to offer an immersive experience that connects you with the soul of Nepal.</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-accent text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-concierge-bell fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">Personalized Service</h5>
+                                    <small>24/7 concierge</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-accent text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-utensils fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">Gourmet Dining</h5>
+                                    <small>Local & international</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-primary-custom mt-3">Discover Our Story</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="contact">
-        <h2 class="section-title">Contact <span>Us</span></h2>
-        <div class="contact-form">
-            <form>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" required>
+    <!-- Rooms Section -->
+    <section id="rooms" class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-accent letter-spacing-2 text-uppercase small">Accommodations</span>
+                <h2 class="display-5 fw-bold mb-3">Luxurious Rooms & Suites</h2>
+                <p class="lead mx-auto" style="max-width: 700px;">Experience unparalleled comfort in our carefully designed rooms, each offering a perfect blend of modern luxury and local charm.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="room-showcase">
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Deluxe Room">
+                        <div class="room-overlay">
+                            <h4 class="fw-bold">Deluxe Room</h4>
+                            <p class="mb-2">Spacious comfort with mountain views</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">$189 <small>/night</small></span>
+                                <a href="#" class="btn btn-sm btn-secondary-custom">View Details</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="room-showcase">
+                        <img src="https://images.unsplash.com/photo-1566669437685-bc1f8fa9e38d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Executive Suite">
+                        <div class="room-overlay">
+                            <h4 class="fw-bold">Executive Suite</h4>
+                            <p class="mb-2">Elegant living with separate lounge</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">$299 <small>/night</small></span>
+                                <a href="#" class="btn btn-sm btn-secondary-custom">View Details</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" rows="5" required></textarea>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="room-showcase">
+                        <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Presidential Suite">
+                        <div class="room-overlay">
+                            <h4 class="fw-bold">Presidential Suite</h4>
+                            <p class="mb-2">Ultimate luxury with panoramic views</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">$499 <small>/night</small></span>
+                                <a href="#" class="btn btn-sm btn-secondary-custom">View Details</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" class="btn">Send Message</button>
-            </form>
+            </div>
+
+            <div class="text-center mt-5" data-aos="fade-up">
+                <a href="#" class="btn btn-primary-custom">View All Rooms</a>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-        </div>
-        <p class="copyright">© 2023 Hidden Paradises Hotel. All rights reserved.</p>
-    </footer>
+    <!-- Amenities Section -->
+    <section id="amenities" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-accent letter-spacing-2 text-uppercase small">Facilities</span>
+                <h2 class="display-5 fw-bold mb-3">World-Class Amenities</h2>
+                <p class="lead mx-auto" style="max-width: 700px;">We provide exceptional facilities to ensure your stay is comfortable, relaxing, and memorable.</p>
+            </div>
 
-    <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        
-        // Check for saved theme preference or use preferred color scheme
-        const currentTheme = localStorage.getItem('theme') || 
-                            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        body.setAttribute('data-theme', currentTheme);
-        
-        themeToggle.addEventListener('click', () => {
-            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Spa & Wellness">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Spa & Wellness</h5>
+                            <p class="card-text">Rejuvenate your senses with our holistic treatments and therapies inspired by ancient Nepalese traditions.</p>
+                            <a href="#" class="text-accent text-decoration-none">Explore Spa <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Gourmet Dining">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Gourmet Dining</h5>
+                            <p class="card-text">Experience culinary excellence with our award-winning restaurants serving local and international cuisine.</p>
+                            <a href="#" class="text-accent text-decoration-none">View Restaurants <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Infinity Pool">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Infinity Pool</h5>
+                            <p class="card-text">Our rooftop infinity pool offers breathtaking views of the Himalayas while you relax in the water.</p>
+                            <a href="#" class="text-accent text-decoration-none">View Facilities <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section id="experiences" class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-accent letter-spacing-2 text-uppercase small">Discover</span>
+                <h2 class="display-5 fw-bold mb-3">Local Experiences</h2>
+                <p class="lead mx-auto" style="max-width: 700px;">Immerse yourself in the rich culture and breathtaking landscapes of Nepal with our curated experiences.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="experience-card">
+                        <img src="https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cultural Tours">
+                        <div class="experience-overlay">
+                            <h4>Cultural Tours</h4>
+                            <p>Explore ancient temples and UNESCO World Heritage sites with our expert guides.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="experience-card">
+                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Hiking Adventures">
+                        <div class="experience-overlay">
+                            <h4>Hiking Adventures</h4>
+                            <p>Discover scenic trails through the Himalayas with breathtaking mountain views.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="experience-card">
+                        <img src="https://images.unsplash.com/photo-1528127269322-539a9434c7d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cooking Classes">
+                        <div class="experience-overlay">
+                            <h4>Cooking Classes</h4>
+                            <p>Learn to prepare authentic Nepalese dishes with our master chefs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5" data-aos="fade-up">
+                <a href="#" class="btn btn-primary-custom">Explore All Experiences</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-accent letter-spacing-2 text-uppercase small">Testimonials</span>
+                <h2 class="display-5 fw-bold mb-3">What Our Guests Say</h2>
+                <p class="lead mx-auto" style="max-width: 700px;">Hear from travelers who have experienced the Hidden Paradise difference.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-circle me-3" width="60" alt="Guest">
+                            <div>
+                                <h5 class="mb-0">Sarah Johnson</h5>
+                                <div class="text-accent">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">"The attention to detail at Hidden Paradise is remarkable. From the warm welcome to the beautifully designed rooms, every aspect of our stay was perfect. The rooftop pool with mountain views was the highlight!"</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg" class="rounded-circle me-3" width="60" alt="Guest">
+                            <div>
+                                <h5 class="mb-0">Michael Chen</h5>
+                                <div class="text-accent">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">"The staff went above and beyond to make our anniversary special. The romantic dinner setup with traditional Nepalese music was unforgettable. We'll definitely be back!"</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle me-3" width="60" alt="Guest">
+                            <div>
+                                <h5 class="mb-0">Emma Rodriguez</h5>
+                                <div class="text-accent">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">"The cultural tour organized by the hotel was the best way to experience Kathmandu. Our guide was incredibly knowledgeable, and the hotel's location made exploring the city so convenient."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+<section id="contact" class="section-padding bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                <span class="text-accent letter-spacing-2 text-uppercase small">Get In Touch</span>
+                <h2 class="display-5 fw-bold mb-4">Contact Us</h2>
+                <p class="lead">We'd love to hear from you. Reach out for reservations, inquiries, or special requests.</p>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-info-box">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h5>Location</h5>
+                            <p>Lazimpat, Kathmandu 44600, Nepal</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-info-box">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h5>Phone</h5>
+                            <p>+977 1 444 1234</p>
+                            <p>+977 980 123 4567 (Mobile)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-info-box">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h5>Email</h5>
+                            <p>info@hiddenparadise.com</p>
+                            <p>reservations@hiddenparadise.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-info-box">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h5>Hours</h5>
+                            <p>24/7 Reception</p>
+                            <p>Restaurant: 6AM-11PM Daily</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h4 class="mb-4">Send Us a Message</h4>
+                        <form>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <select class="form-select" id="subject">
+                                    <option>General Inquiry</option>
+                                    <option>Reservation Request</option>
+                                    <option>Event Inquiry</option>
+                                    <option>Feedback</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom w-100">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h4 class="text-white mb-4">Hidden Paradise Hotel</h4>
+                <p class="text-light">A luxury boutique hotel offering an authentic Nepalese experience with world-class amenities in the heart of Kathmandu.</p>
+                <div class="mt-4">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4">
+                <h5 class="text-white mb-4">Quick Links</h5>
+                <div class="footer-links">
+                    <a href="#">Home</a>
+                    <a href="#rooms">Rooms & Suites</a>
+                    <a href="#amenities">Amenities</a>
+                    <a href="#experiences">Experiences</a>
+                    <a href="#about">About Us</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Contact Info</h5>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-map-marker-alt me-2"></i> Lazimpat, Kathmandu, Nepal</a>
+                    <a href="tel:+97714441234"><i class="fas fa-phone-alt me-2"></i> +977 1 444 1234</a>
+                    <a href="mailto:info@hiddenparadise.com"><i class="fas fa-envelope me-2"></i> info@hiddenparadise.com</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Newsletter</h5>
+                <p class="text-light">Subscribe to our newsletter for special offers and updates.</p>
+                <form class="mt-3">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your Email" aria-label="Your Email">
+                        <button class="btn btn-secondary-custom" type="submit">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr class="my-4 bg-light opacity-10">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0 text-light">&copy; 2023 Hidden Paradise Hotel. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="footer-links d-inline">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<a href="#" class="btn btn-secondary-custom btn-lg back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
+<!-- JavaScript Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+    // Initialize AOS animation
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar-custom');
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Dark mode toggle
+    const modeToggle = document.getElementById('modeToggle');
+    const body = document.body;
+    
+    modeToggle.addEventListener('click', function() {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            modeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            modeToggle.setAttribute('title', 'Toggle Light Mode');
+        } else {
+            modeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            modeToggle.setAttribute('title', 'Toggle Dark Mode');
+        }
+    });
+
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('show');
+        } else {
+            backToTop.classList.remove('show');
+        }
+    });
+    
+    backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+</script>
 </body>
 </html>
