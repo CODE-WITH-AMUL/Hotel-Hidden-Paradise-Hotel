@@ -78,10 +78,19 @@ WSGI_APPLICATION = 'hotel.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Use the SQLite backend
-        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
+        'ENGINE': 'mssql',
+        'NAME': 'HotelManagementSystem',
+        'USER': 'codewithamul',
+        'PASSWORD': 'Enter your password',
+        'HOST': 'localhost',   
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',  
+        },
     }
 }
+
 
 
 
